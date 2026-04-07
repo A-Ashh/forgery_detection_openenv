@@ -9,7 +9,9 @@ description = "A document forgery investigation environment for OpenEnv"
 authors = [
     {name = "Aastha Agnihotri"}
 ]
+# ADD THESE DEPENDENCIES
 dependencies = [
+    "openenv-core>=0.2.0",
     "fastapi>=0.110.0",
     "uvicorn>=0.29.0",
     "pydantic>=2.0.0",
@@ -17,6 +19,10 @@ dependencies = [
 ]
 requires-python = ">=3.11"
 
+# ADD THIS ENTRY POINT
+[project.scripts]
+server = "server.app:main"
+
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["env*"]
+include = ["env*", "server*"]
