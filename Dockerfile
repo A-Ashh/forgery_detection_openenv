@@ -28,4 +28,4 @@ ENV PORT=7860
 EXPOSE 7860
 
 # Start the FastAPI server
-CMD ["python", "app.py"]
+CMD ["python", "server/app.py"]
