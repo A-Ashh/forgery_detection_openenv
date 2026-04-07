@@ -1,0 +1,82 @@
+name: forgery-detection-openenv
+version: 1.0.0
+description: >
+  A document forgery investigation environment where an AI agent acts as a
+  forensic analyst. The agent inspects document regions (dates, signatures,
+  metadata, seals) and must determine whether each document is real or forged.
+  Supports three difficulty levels with programmatic graders.
+
+author: Aastha Agnihotri
+license: MIT
+tags:
+  - openenv
+  - forgery-detection
+  - document-analysis
+  - rl-environment
+  - forensics
+
+entrypoint: env.environment:ForgeryDetectionEnv
+
+observation_schema: Observation
+action_schema: Action
+reward_schema: Reward
+
+tasks:
+  - name: easy
+    description: >
+      Classify the document as real or forged in a single prediction.
+      No region inspection required.
+    difficulty: easy
+    max_steps: 2
+    scoring: exact_match
+
+  - name: medium
+    description: >
+      Inspect at least one document region before making a prediction.
+      Partial credit if the correct region is not inspected.
+    difficulty: medium
+    max_steps: 4
+    scoring: weighted
+
+  - name: hard
+    description: >
+      Conduct a thorough multi-region investigation (3+ inspections)
+      before predicting. Rewards depth of analysis and hitting the actual
+      forged region.
+    difficulty: hard
+    max_steps: 6
+    scoring: weighted_with_reasoning
+
+action_space:
+  type: discrete
+  actions:
+    - inspect_date
+    - inspect_signature
+    - inspect_metadata
+    - inspect_seal
+    - request_additional_info
+    - predict_real
+    - predict_forged
+
+observation_space:
+  document_text: str
+  visible_features: str
+  last_action_result: str
+  step_number: int
+  available_actions: list[str]
+
+reward_range: [-0.5, 1.0]
+episode_length: 6
+
+environment_variables:
+  - name: API_BASE_URL
+    description: The API endpoint for the LLM (e.g. https://api.openai.com/v1)
+    required: false
+    default: https://api.openai.com/v1
+  - name: MODEL_NAME
+    description: The model identifier to use for inference
+    required: false
+    default: gpt-4o-mini
+  - name: HF_TOKEN
+    description: Your Hugging Face API token / OpenAI API key
+    required: true
