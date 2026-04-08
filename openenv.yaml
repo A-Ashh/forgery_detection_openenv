@@ -5,7 +5,6 @@ description: >
   forensic analyst. The agent inspects document regions (dates, signatures,
   metadata, seals) and must determine whether each document is real or forged.
   Supports three difficulty levels with programmatic graders.
-
 author: Aastha Agnihotri
 license: MIT
 tags:
@@ -14,13 +13,10 @@ tags:
   - document-analysis
   - rl-environment
   - forensics
-
 entrypoint: env.environment:ForgeryDetectionEnv
-
 observation_schema: Observation
 action_schema: Action
 reward_schema: Reward
-
 tasks:
   - name: easy
     description: >
@@ -29,7 +25,6 @@ tasks:
     difficulty: easy
     max_steps: 2
     scoring: exact_match
-
   - name: medium
     description: >
       Inspect at least one document region before making a prediction.
@@ -37,7 +32,6 @@ tasks:
     difficulty: medium
     max_steps: 4
     scoring: weighted
-
   - name: hard
     description: >
       Conduct a thorough multi-region investigation (3+ inspections)
@@ -46,7 +40,6 @@ tasks:
     difficulty: hard
     max_steps: 6
     scoring: weighted_with_reasoning
-
 action_space:
   type: discrete
   actions:
@@ -57,17 +50,14 @@ action_space:
     - request_additional_info
     - predict_real
     - predict_forged
-
 observation_space:
   document_text: str
   visible_features: str
   last_action_result: str
   step_number: int
   available_actions: list[str]
-
-reward_range: [-0.5, 1.0]
+reward_range: [0.01, 0.99]
 episode_length: 6
-
 environment_variables:
   - name: API_BASE_URL
     description: The API endpoint for the LLM (e.g. https://api.openai.com/v1)
